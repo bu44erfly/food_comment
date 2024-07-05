@@ -27,6 +27,9 @@ public class Shop implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public Shop(Long id){
+        this.id = id;
+    }
     /**
      * 主键
      */
