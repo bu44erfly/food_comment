@@ -8,16 +8,24 @@ import com.hmdp.entity.VoucherOrder;
 import com.hmdp.mapper.VoucherOrderMapper;
 import com.hmdp.service.ISeckillVoucherService;
 import com.hmdp.service.IVoucherOrderService;
+import com.hmdp.utils.ILock;
+import com.hmdp.utils.ILockImpl;
 import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
 import org.jetbrains.annotations.NotNull;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
 
 /**
  * <p>
@@ -26,11 +34,16 @@ import java.time.LocalTime;
  */
 @Service
 public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, VoucherOrder> implements IVoucherOrderService {
-
     @Resource
     private  ISeckillVoucherService seckillVoucherService;
     @Resource
     private RedisIdWorker redisIdWorker;
+    @Resource
+    RedissonClient redissonClient;
+
+    @Autowired
+    @Qualifier("redisTemplate")
+    private RedisTemplate template  ;
 
     @Override
     public Result seckillvoucher(Long voucherId) {
@@ -47,15 +60,20 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return Result.fail("数量不足") ;
         }
 
-
         Long userId = UserHolder.getUser().getId();
-        //仅限单体应用使用
-        synchronized (userId.toString().intern()) {
-            //实现获取代理对象 比较复杂 我采用了自己注入自己的方式
-            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
-            return proxy.getResult(voucherId);
+    //    ILockImpl lock =new ILockImpl("order:"+userId ,template);
+        RLock lock = redissonClient.getLock("order:"+userId);
+        if(lock.tryLock() ==false) {
+            return Result.fail("已经抢购订单!") ;
         }
 
+        try{
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+            return  proxy.getResult(voucherId) ;
+        }
+        finally {
+            lock.unlock();
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -89,6 +107,5 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         //返回订单id
         return Result.ok(orderId);
     }
-
-
+    
 }

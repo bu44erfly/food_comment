@@ -22,6 +22,7 @@ import java.util.List;
  * @since 2021-12-22
  */
 @Service
+
 public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> implements IVoucherService {
 
     @Resource

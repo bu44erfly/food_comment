@@ -2,6 +2,8 @@ package com.hmdp.utils;
 import cn.hutool.core.bean.BeanUtil;
 import com.hmdp.dto.UserDTO;
 import com.hmdp.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,6 +17,7 @@ import static com.hmdp.utils.RedisConstants.LOGIN_USER_KEY;
 import static com.hmdp.utils.RedisConstants.LOGIN_USER_TTL;
 
 public class RefreshTokenIntercepter implements HandlerInterceptor {
+    private static final Logger log = LoggerFactory.getLogger(RefreshTokenIntercepter.class);
     private RedisTemplate template ;
 
     public RefreshTokenIntercepter(RedisTemplate template) {
@@ -26,6 +29,7 @@ public class RefreshTokenIntercepter implements HandlerInterceptor {
         //   String token =(String) request.getSession().getAttribute("user");
         String token = request.getHeader("authorization");
 
+        log.info("token:{}", token);
         if(token==null||token.isBlank()){
             return true ;
         }
