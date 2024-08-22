@@ -7,6 +7,10 @@ import com.hmdp.entity.Voucher;
 import com.hmdp.mapper.VoucherMapper;
 import com.hmdp.service.ISeckillVoucherService;
 import com.hmdp.service.IVoucherService;
+import com.hmdp.utils.RedisConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,16 +21,16 @@ import java.util.List;
  * <p>
  *  服务实现类
  * </p>
- *
- * @author 虎哥
- * @since 2021-12-22
  */
 @Service
 
 public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> implements IVoucherService {
-
     @Resource
     private ISeckillVoucherService seckillVoucherService;
+
+    @Autowired
+    @Qualifier("stringRedisTemplate")
+    private StringRedisTemplate redisTemplate ;
 
     @Override
     public Result queryVoucherOfShop(Long shopId) {
@@ -40,6 +44,9 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
     @Transactional
     public void addSeckillVoucher(Voucher voucher) {
         // 保存优惠券
+        String key = RedisConstants.SECKILL_STOCK_KEY+voucher.getId();
+        redisTemplate.opsForValue().set(key, String.valueOf(voucher.getStock()));
+
         save(voucher);
         // 保存秒杀信息
         SeckillVoucher seckillVoucher = new SeckillVoucher();
