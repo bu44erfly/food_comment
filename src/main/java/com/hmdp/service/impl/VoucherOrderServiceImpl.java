@@ -11,6 +11,7 @@ import com.hmdp.rebbitmq.MQSender;
 import com.hmdp.service.ISeckillVoucherService;
 import com.hmdp.service.IVoucherOrderService;
 
+import com.hmdp.utils.ILockImpl;
 import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -72,21 +73,28 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return Result.fail("数量不足") ;
         }
 
+
+        // 3、创建订单（使用分布式锁）
         Long userId = UserHolder.getUser().getId();
 
-        Long r =  redisTemplate.execute(
-                SECKILL_SCRIPT,
-                Collections.emptyList(),
-                voucherId.toString(),
-                userId.toString()
-        );
-        //2.判断结果为0
-        int result = r.intValue();
-        if (result != 0) {
-            //2.1不为0代表没有购买资格
-            return Result.fail(r == 1 ? "库存不足" : "该用户重复下单");
+       ILockImpl lock = new ILockImpl(redisTemplate, "order:" + userId);
+        boolean isLock = lock.tryLock(1200L);
+        if (!isLock) {
+            // 索取锁失败，重试或者直接抛异常（这个业务是一人一单，所以直接返回失败信息）
+            return Result.fail("一人只能下一单");
+        }
+        try {
+            // 索取锁成功，创建代理对象，使用代理对象调用第三方事务方法， 防止事务失效
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+            return proxy.createVoucherOrder(userId, voucherId);
+        } finally {
+            lock.unlock();
         }
 
+    }
+
+    @Transactional
+    public Result createVoucherOrder(Long userId, Long voucherId){
         //2.3创建订单
         VoucherOrder voucherOrder = new VoucherOrder();
         //2.4订单id

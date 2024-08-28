@@ -43,14 +43,19 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
     @Override
     public Result queryById(Long id) {
-        Shop shop = queryWithPassThrough(id) ;
-     //   Shop shop = queryWithMutex(id);
+     //   Shop shop = queryWithPassThrough(id) ;
+        Shop shop = queryWithMutex(id);
         if(shop == null){
             return Result.fail("id不存在") ;
         }
         return Result.ok(shop);
     }
 
+    /**
+     *  互斥锁
+     * @param id
+     * @return
+     */
     private Shop queryWithMutex(Long id) {
         Shop cacheshop= (Shop) template.opsForValue().get(CACHE_SHOP_KEY + id);
 
@@ -89,28 +94,28 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         }
 
     }
-    private Shop queryWithPassThrough(Long id) {
-        Shop cacheshop= (Shop) template.opsForValue().get(CACHE_SHOP_KEY + id);
-
-        //解决缓存穿透    ：redis存空值
-        if(cacheshop!=null){
-            if(-1L==cacheshop.getId())
-                return null;
-            return cacheshop ;
-        }
-
-
-        Shop shop=this.getById(id) ;
-        if(shop==null){
-            template.opsForValue().set(CACHE_SHOP_KEY+id,new Shop(-1L),
-                    RedisConstants.CACHE_NULL_TTL, TimeUnit.MINUTES) ; //
-
-            return null ;
-        }
-
-        template.opsForValue().set(CACHE_SHOP_KEY+id, shop, CACHE_SHOP_TTL, TimeUnit.MINUTES) ; //
-        return shop ;
-    }
+//    private Shop queryWithPassThrough(Long id) {
+//        Shop cacheshop= (Shop) template.opsForValue().get(CACHE_SHOP_KEY + id);
+//
+//        //解决缓存穿透    ：redis存空值
+//        if(cacheshop!=null){
+//            if(-1L==cacheshop.getId())
+//                return null;
+//            return cacheshop ;
+//        }
+//
+//
+//        Shop shop=this.getById(id) ;
+//        if(shop==null){
+//            template.opsForValue().set(CACHE_SHOP_KEY+id,new Shop(-1L),
+//                    RedisConstants.CACHE_NULL_TTL, TimeUnit.MINUTES) ; //
+//
+//            return null ;
+//        }
+//
+//        template.opsForValue().set(CACHE_SHOP_KEY+id, shop, CACHE_SHOP_TTL, TimeUnit.MINUTES) ; //
+//        return shop ;
+//    }
     @Override
     public Result update(Shop shop) {
         Long id = shop.getId();

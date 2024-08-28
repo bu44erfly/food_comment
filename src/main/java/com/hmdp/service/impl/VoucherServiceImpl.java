@@ -43,9 +43,6 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
     @Override
     @Transactional
     public void addSeckillVoucher(Voucher voucher) {
-        // 保存优惠券
-        String key = RedisConstants.SECKILL_STOCK_KEY+voucher.getId();
-        redisTemplate.opsForValue().set(key, String.valueOf(voucher.getStock()));
 
         save(voucher);
         // 保存秒杀信息

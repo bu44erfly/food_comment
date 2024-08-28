@@ -26,10 +26,12 @@ public class ShopTypeServiceImpl extends ServiceImpl<ShopTypeMapper, ShopType> i
     @Autowired
     @Qualifier("redisTemplate")
     private RedisTemplate template;
+
     @Override
     public Result queryList() {
         String key = RedisConstants.CACHE_TYPE_KEY ;
         Long size=template.opsForList().size(key) ;
+
         if(size!=null &&size >0){
             List<ShopType> list = template.opsForList().range(key, 0, size);
             return Result.ok(list) ;
