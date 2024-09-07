@@ -46,6 +46,7 @@ public class MQReceiver {
             log.error("该用户已购买过");
             return ;
         }
+
         log.info("扣减库存");
         //6.扣减库存
         boolean success = seckillVoucherService
@@ -58,6 +59,8 @@ public class MQReceiver {
             log.error("库存不足");
             return;
         }
+
+
         //直接保存订单
         voucherOrderService.save(voucherOrder);
     }
