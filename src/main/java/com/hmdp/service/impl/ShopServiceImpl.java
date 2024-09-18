@@ -7,7 +7,9 @@ import com.hmdp.dto.Result;
 import com.hmdp.entity.Shop;
 import com.hmdp.mapper.ShopMapper;
 import com.hmdp.service.IShopService;
+import com.hmdp.utils.CheckUtil;
 import com.hmdp.utils.RedisConstants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,11 +29,15 @@ import static com.hmdp.utils.RedisConstants.*;
  * @author 虎哥
  * @since 2021-12-22
  */
+@Slf4j
 @Service
 public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IShopService {
     @Autowired
     @Qualifier("redisTemplate")
     private RedisTemplate template ;
+
+    @Resource
+    private CheckUtil checkUtil;
 
     private boolean tryLock(String key) {
         Boolean flag = template.opsForValue().setIfAbsent(key, "1", LOCK_SHOP_TTL, TimeUnit.SECONDS);
@@ -57,7 +63,14 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
      * @return
      */
     private Shop queryWithMutex(Long id) {
+
         Shop cacheshop= (Shop) template.opsForValue().get(CACHE_SHOP_KEY + id);
+
+        String key  = CACHE_SHOP_KEY + id;
+        if (!checkUtil.checkWithBloomFilter("whitelistShop", key)) {
+            log.info("白名单没有此信息，不可以访问" + key);
+            return null;
+        }
 
         if(cacheshop!=null){
             if(-1L==cacheshop.getId())

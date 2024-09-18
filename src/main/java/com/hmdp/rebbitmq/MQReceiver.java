@@ -26,8 +26,9 @@ public class MQReceiver {
     @Resource
     ISeckillVoucherService seckillVoucherService;
     /**
-     * 接收秒杀信息并下单
+     * rabbitmq 消息队列异步下单
      * @param msg
+     *
      */
     @Transactional
     @RabbitListener(queues = RabbitConfig.QUEUE)

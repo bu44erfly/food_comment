@@ -29,6 +29,12 @@ public class ILockImpl implements ILock {
         this.name = name;
     }
 
+    /**
+     * 获取锁
+     * add：进程标识 ，必须是自己的线程才能释放锁
+     * @param timeoutSec
+     * @return
+     */
     @Override
     public boolean tryLock(Long timeoutSec) {
         String threadId = ID_PREFIX + Thread.currentThread().getId() + "";
@@ -38,7 +44,6 @@ public class ILockImpl implements ILock {
         return Boolean.TRUE.equals(result);
 
     }
-
 
     private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;
 
@@ -52,6 +57,7 @@ public class ILockImpl implements ILock {
     public boolean unlock() {
         String currentThreadFlag = ID_PREFIX + Thread.currentThread().getId();
         String redisThreadFlag = stringRedisTemplate.opsForValue().get(KEY_PREFIX + name);
+
 
         stringRedisTemplate.execute(
                 UNLOCK_SCRIPT,

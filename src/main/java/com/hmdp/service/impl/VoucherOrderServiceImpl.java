@@ -3,6 +3,7 @@ package com.hmdp.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.config.CuratorConfig;
 import com.hmdp.dto.Result;
 import com.hmdp.entity.SeckillVoucher;
 import com.hmdp.entity.VoucherOrder;
@@ -14,6 +15,8 @@ import com.hmdp.service.IVoucherOrderService;
 import com.hmdp.utils.ILockImpl;
 import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
+import com.hmdp.utils.ZookeeperLock;
+import org.apache.curator.framework.CuratorFramework;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +62,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         SECKILL_SCRIPT.setResultType(Long.class);
     }
     @Override
-    public Result seckillvoucher(Long voucherId) {
+    public Result seckillvoucher(Long voucherId)  {
         SeckillVoucher voucher=  seckillVoucherService.getById(voucherId) ;
 
         if(voucher.getBeginTime().isAfter(LocalDateTime.now())){
@@ -73,12 +76,19 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return Result.fail("数量不足") ;
         }
 
-
         // 3、创建订单（使用分布式锁）
         Long userId = UserHolder.getUser().getId();
+      //  ILockImpl lock = new ILockImpl(redisTemplate, "order:" + userId);
 
-       ILockImpl lock = new ILockImpl(redisTemplate, "order:" + userId);
-        boolean isLock = lock.tryLock(1200L);
+        CuratorFramework client = CuratorConfig.createCuratorClient();
+        String lockPath = "/locks";
+        ZookeeperLock lock =new ZookeeperLock(client ,lockPath) ;
+        boolean isLock = false;
+        try {
+            isLock = lock.tryLock();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         if (!isLock) {
             // 索取锁失败，重试或者直接抛异常（这个业务是一人一单，所以直接返回失败信息）
             return Result.fail("一人只能下一单");
@@ -88,11 +98,21 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
             return proxy.createVoucherOrder(userId, voucherId);
         } finally {
-            lock.unlock();
+            try {
+                lock.unLock(); //
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
-
     }
 
+
+    /**
+     * 创建订单
+     * @param userId
+     * @param voucherId
+     * @return
+     */
     @Transactional
     public Result createVoucherOrder(Long userId, Long voucherId){
         //2.3创建订单
