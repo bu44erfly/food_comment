@@ -83,6 +83,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
         String key="follows:"+userId;
         //求交集
         String key2="follows:"+id;
+
         Set<String> intersect = stringRedisTemplate.opsForSet().intersect(key, key2);
         if (intersect==null||intersect.isEmpty()) {
             return Result.ok(Collections.emptyList());
