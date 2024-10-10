@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitConfig {
     public static final String QUEUE = "seckillQueue";
     public static final String EXCHANGE = "seckillExchange";
-    public static final String ROUTINGKEY = "seckill.message";
+    public static final String BIND_KEY = "seckill.message";
     @Bean
     public Queue queue(){
         return new Queue(QUEUE);
@@ -21,9 +21,9 @@ public class RabbitConfig {
     public TopicExchange topicExchange(){
         return new TopicExchange(EXCHANGE);
     }
+
     @Bean
     public Binding binding(){
-        return BindingBuilder.bind(queue()).to(topicExchange()).with(ROUTINGKEY);
+        return BindingBuilder.bind(queue()).to(topicExchange()).with(BIND_KEY);
     }
-
 }

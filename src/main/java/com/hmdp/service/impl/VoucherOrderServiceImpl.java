@@ -53,7 +53,6 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Resource
     private MQSender mqSender;
 
-
     private static final DefaultRedisScript<Long> SECKILL_SCRIPT;
 
     static {
@@ -81,8 +80,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
       //  ILockImpl lock = new ILockImpl(redisTemplate, "order:" + userId);
 
         CuratorFramework client = CuratorConfig.createCuratorClient();
-        String lockPath = "/locks";
-        ZookeeperLock lock =new ZookeeperLock(client ,lockPath) ;
+
+        ZookeeperLock lock =new ZookeeperLock(client ,"order:" + userId) ;
         boolean isLock = false;
         try {
             isLock = lock.tryLock();

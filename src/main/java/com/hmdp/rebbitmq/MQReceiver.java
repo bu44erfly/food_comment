@@ -61,7 +61,6 @@ public class MQReceiver {
             return;
         }
 
-
         //直接保存订单
         voucherOrderService.save(voucherOrder);
     }

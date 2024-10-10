@@ -24,6 +24,6 @@ public class MQSender {
      */
     public void sendSeckillMessage(String msg){
         log.info("发送消息"+msg);
-        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE,ROUTINGKEY,msg);
+        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE,  ROUTINGKEY,  msg);
     }
 }

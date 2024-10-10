@@ -41,8 +41,8 @@ public class ILockImpl implements ILock {
         // SET lock:name id EX timeoutSec NX
         Boolean result = stringRedisTemplate.opsForValue()
                 .setIfAbsent(KEY_PREFIX + name, threadId, timeoutSec, TimeUnit.SECONDS);
-        return Boolean.TRUE.equals(result);
 
+        return Boolean.TRUE.equals(result);
     }
 
     private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;

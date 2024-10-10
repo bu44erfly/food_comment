@@ -5,29 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b66f6707-ef7b-4544-9a1d-9e9fe2c7ef5d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/FollowServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/FollowServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/BlogController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/BlogController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/FollowController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/FollowController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/UploadController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/UploadController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/IBlogService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/IBlogService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/IFollowService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/IFollowService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/IVoucherOrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/IVoucherOrderService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/BlogServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/BlogServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/FollowServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/FollowServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopTypeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/ShopTypeServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherOrderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherOrderServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/service/impl/VoucherServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/ILock.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/utils/ILock.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/ILockImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/utils/ILockImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/RedisConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/utils/RedisConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/hmdp/utils/SystemConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hmdp/utils/SystemConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/unlock.lua" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/unlock.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/config/RabbitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/config/RabbitConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/rebbitmq/MQReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/rebbitmq/MQReceiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/rebbitmq/MQSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/rebbitmq/MQSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/service/impl/VoucherOrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/ILockImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hmdp/utils/ILockImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,6 +131,11 @@
       <workItem from="1726847835203" duration="500000" />
       <workItem from="1726992003506" duration="5000" />
       <workItem from="1726992051066" duration="2130000" />
+      <workItem from="1727514642563" duration="2059000" />
+      <workItem from="1727615999373" duration="986000" />
+      <workItem from="1728148976315" duration="1050000" />
+      <workItem from="1728287943373" duration="5275000" />
+      <workItem from="1728539552500" duration="2893000" />
     </task>
     <servers />
   </component>
